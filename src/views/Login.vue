@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import {postKeyValueRequest} from "@/utils/api";
-
 export default {
   name: "Login",
   data(){
@@ -40,9 +38,11 @@ export default {
         if (valid) {
           //alert('登陆成功!');
           //console.log(this.loginForm)
-          postKeyValueRequest('/doLogin', this.loginForm).then(resp=>{
+          this.postKeyValueRequest('/doLogin', this.loginForm).then(resp=>{
             if (resp) {
-              alert(JSON.stringify(resp))
+              //alert(JSON.stringify(resp))
+              window.sessionStorage.setItem("user", JSON.stringify(resp.obj));
+              this.$router.replace("/home")
             }
           })
         } else {

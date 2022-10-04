@@ -8,6 +8,9 @@ axios.interceptors.response.use(
             Message.error({message: success.data.msg});
             return;
         }
+        if (success.data.msg) {
+            Message.success({message: success.data.msg})
+        }
         return success.data;
     },
     error => {
@@ -47,4 +50,34 @@ export const postKeyValueRequest = (url, params) => {
         }
     });
 }
+
+export const postRequest = (url, params) => {
+    return axios({
+        method: 'post',
+        url: `${base}${url}`,
+        data: params
+    })
+}
+export const putRequest = (url, params) => {
+    return axios({
+        method: 'put',
+        url: `${base}${url}`,
+        data: params
+    })
+}
+export const getRequest = (url, params) => {
+    return axios({
+        method: 'get',
+        url: `${base}${url}`,
+        params: params
+    })
+}
+export const deleteRequest = (url, params) => {
+    return axios({
+        method: 'delete',
+        url: `${base}${url}`,
+        params: params
+    })
+}
+
 
