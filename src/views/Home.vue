@@ -17,14 +17,26 @@
     </el-header>
     <el-container>
       <el-aside width="200px">
-        <el-menu router>
-          <el-submenu index="1">
+<!--        <el-menu router>-->
+<!--          <el-submenu index="1">-->
+<!--            <template slot="title">-->
+<!--              <i class="el-icon-location"></i>-->
+<!--              <span>导航一</span>-->
+<!--            </template>-->
+<!--            <el-menu-item index="/test1">选项1</el-menu-item>-->
+<!--            <el-menu-item index="/test2">选项2</el-menu-item>-->
+<!--          </el-submenu>-->
+<!--        </el-menu>-->
+        <el-menu router unique-opened>
+          <!--  this.$router.options.routes     使用的是router中的路由   -->
+          <el-submenu :index="index+''" v-for="(item,index) in routes" v-if="!item.hidden" :key="index">
             <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>导航一</span>
+              <i style="color: #409eff;margin-right: 5px" :class="item.iconCls"></i>
+              <span>{{item.name}}</span>
             </template>
-            <el-menu-item index="/test1">选项1</el-menu-item>
-            <el-menu-item index="/test2">选项2</el-menu-item>
+            <el-menu-item :index="child.path" v-for="(child,indexj) in item.children" :key="indexj">
+              {{child.name}}
+            </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -41,6 +53,11 @@ export default {
   data() {
     return {
       user: JSON.parse(window.sessionStorage.getItem("user"))
+    }
+  },
+  computed:{
+    routes(){
+      return this.$store.state.routes;
     }
   },
   methods:{
