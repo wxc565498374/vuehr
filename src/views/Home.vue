@@ -41,6 +41,13 @@
         </el-menu>
       </el-aside>
       <el-main>
+        <el-breadcrumb separator-class="el-icon-arrow-right" v-if="this.$router.currentRoute.path!='/home'">
+          <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>{{this.$router.currentRoute.name}}</el-breadcrumb-item>
+        </el-breadcrumb>
+        <div class="homeWelcome" v-if="this.$router.currentRoute.path=='/home'">
+          欢迎来到微人事！
+        </div>
         <router-view/>
       </el-main>
     </el-container>
@@ -86,6 +93,14 @@ export default {
 </script>
 
 <style>
+   .homeWelcome{
+     text-align: center;
+     color: #409eff;
+     font-size: 40px;
+     font-family: 华文行楷;
+     padding-top: 50px;
+   }
+
   .homeHeader{
     background-color: #409eff;
     display: flex;

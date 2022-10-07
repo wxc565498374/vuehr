@@ -2,8 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Home from '../views/Home.vue'
-import Test1 from '../views/Test1.vue'
-import Test2 from '../views/Test2.vue'
+//import Test1 from '../views/Test1.vue'
+//import Test2 from '../views/Test2.vue'
 
 Vue.use(VueRouter)
 
@@ -19,8 +19,9 @@ const routes = [
     name: 'Home',
     component: Home,
     hidden: true
-  },
-  {
+  }
+  //写死的菜单
+  /*{
     path: '/home',
     name: '导航1',
     component: Home,
@@ -36,7 +37,7 @@ const routes = [
         component: Test2
       }
     ]
-  }
+  }*/
 
 ]
 
