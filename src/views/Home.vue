@@ -70,6 +70,7 @@ export default {
         }).then(() => {
           this.getRequest("/logout");
           window.sessionStorage.removeItem("user");
+          // 注销移除store路由数据，否则其他用户登陆同一台电脑会看到上个人的菜单数据，刷新后正常显示
           this.$store.commit("initRoutes", []);
           this.$router.replace("/")
         }).catch(() => {
