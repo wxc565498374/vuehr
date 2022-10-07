@@ -69,7 +69,8 @@ export default {
           type: 'warning'
         }).then(() => {
           this.getRequest("/logout");
-          window.sessionStorage.removeItem("user")
+          window.sessionStorage.removeItem("user");
+          this.$store.commit("initRoutes", []);
           this.$router.replace("/")
         }).catch(() => {
           this.$message({

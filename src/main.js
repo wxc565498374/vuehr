@@ -10,6 +10,8 @@ import {getRequest} from "@/utils/api";
 import {deleteRequest} from "@/utils/api";
 import {postRequest} from "@/utils/api";
 import {initMenu} from "@/utils/menus";
+// 引入图表库
+import 'font-awesome/css/font-awesome.min.css'
 
 Vue.prototype.postKeyValueRequest=postKeyValueRequest;
 Vue.prototype.putRequest=putRequest;
