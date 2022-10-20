@@ -50,6 +50,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-button type="danger" size="small" style="margin-top: 10px" :disabled="multipleSelection.length==0" @click="deleteBatch">批量删除</el-button>
     </div>
 
     <el-dialog
@@ -58,11 +59,11 @@
         width="30%">
       <div>
         <el-tag>职位名称</el-tag>
-        <el-input class="updatePosInput" size="small"></el-input>
+        <el-input class="updatePosInput" size="small" v-model="updatePos.name"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false" size="small">确 定</el-button>
+    <el-button type="primary" @click="doUpdate" size="small">确 定</el-button>
     </span>
     </el-dialog>
   </div>
@@ -74,9 +75,14 @@ export default {
   name: "PosMana",
   data(){
     return {
+      // 添加框属性
       pos:{
         name:''
       },
+      updatePos:{
+        name:''
+      },
+      multipleSelection: [],
       dialogVisible: false,
       positions: []
     }
@@ -107,6 +113,17 @@ export default {
 
     showEditView(index, data){
       this.dialogVisible = true;
+      //this.updatePos=data
+      Object.assign(this.updatePos, data);
+    },
+
+    doUpdate(){
+      this.putRequest("/system/basic/pos/", this.updatePos).then(resp=>{
+        if (resp) {
+          this.dialogVisible = false;
+          this.initPositions();
+        }
+      })
     },
 
     handleDelete(index, data){
@@ -123,6 +140,23 @@ export default {
           type: 'info',
           message: '已取消删除'
         });
+      });
+    },
+
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+
+    deleteBatch(){
+      let ids = '';
+      this.multipleSelection.forEach(item=>{
+        ids += item.id + ','
+        console.log(ids);
+      });
+      this.deleteRequest("/system/basic/pos/delBatch/" + ids).then(resp=>{
+        if (resp) {
+          this.initPositions();
+        }
       });
     }
   }
