@@ -16,7 +16,7 @@
       </el-dropdown>
     </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="200px" style="background-color: #222d32;margin-bottom: -200px">
 <!--        <el-menu router>-->
 <!--          <el-submenu index="1">-->
 <!--            <template slot="title">-->
@@ -27,7 +27,10 @@
 <!--            <el-menu-item index="/test2">选项2</el-menu-item>-->
 <!--          </el-submenu>-->
 <!--        </el-menu>-->
-        <el-menu router unique-opened>
+        <el-menu router unique-opened
+                 background-color="#222d32"
+                 text-color="#fff"
+                 active-text-color="#ffd04b">
           <!--  this.$router.options.routes     使用的是router中的路由   -->
           <el-submenu :index="index+''" v-for="(item,index) in routes" v-if="!item.hidden" :key="index">
             <template slot="title">
@@ -106,7 +109,7 @@ export default {
    }
 
   .homeHeader{
-    background-color: #409eff;
+    background-color: #3c8dbc;
     display: flex;
     align-items: center;
     justify-content: space-between;

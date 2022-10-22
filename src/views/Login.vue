@@ -1,6 +1,10 @@
-<template>
+<template style="background-color: #ecf0f5">
   <div>
-    <el-form :rules="rules" ref="loginForm" :model="loginForm" class="loginContainer">
+    <el-form :rules="rules" ref="loginForm" :model="loginForm" class="loginContainer"
+             v-loading="loading"
+             element-loading-text="登陆中..."
+             element-loading-spinner="el-icon-loading"
+             element-loading-background="255,255,255,0">
       <h3 class="loginTitle">系统登陆</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placehoder="请输入用户名"></el-input>
@@ -22,6 +26,7 @@ export default {
   name: "Login",
   data(){
     return {
+      loading: false,
       loginForm: {
         username: 'admin',
         password: '123',
@@ -35,7 +40,9 @@ export default {
   },
   methods: {
     submitLogin(){
+      this.loading = true;
       this.$refs.loginForm.validate((valid) => {
+        this.loading = false;
         if (valid) {
           //alert('登陆成功!');
           //console.log(this.loginForm)

@@ -30,6 +30,10 @@
           stripe
           size="small"
           style="width: 100%"
+          v-loading="loading"
+          element-loading-text="加载中..."
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="255,255,255,0"
           @selection-change="handleSelectionChange">
         <el-table-column
             type="selection"
@@ -79,17 +83,55 @@
     </div>
 
     <el-dialog
-        title="修改职位"
+        title="修改职称"
         :visible.sync="dialogVisible"
         width="30%">
-      <div>
-        <el-tag>职位名称</el-tag>
-        <el-input class="updatePosInput" size="small" v-model="updatePos.name"></el-input>
-      </div>
+
+      <table>
+        <tr>
+          <td>
+            <el-tag>职称名</el-tag>
+          </td>
+          <td>
+            <el-input class="updatePosInput" size="small" v-model="updateLevel.name"></el-input>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <el-tag>职称级别</el-tag>
+          </td>
+          <td>
+            <el-select v-model="updateLevel.titleLevel" placeholder="职称等级" size="small" style="margin-left: 5px">
+              <el-option
+                  v-for="item in selectJobLevels"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+              </el-option>
+            </el-select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <el-tag>是否启用</el-tag>
+          </td>
+          <td>
+            <el-switch
+                style="display: block"
+                v-model="updateLevel.enabled"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="启用"
+                inactive-text="禁用"
+            >
+            </el-switch>
+          </td>
+        </tr>
+      </table>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-    <el-button type="primary" @click="doUpdate" size="small">确 定</el-button>
-    </span>
+        <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="doUpdate" size="small">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -101,76 +143,76 @@ export default {
   data(){
     return {
       // 添加框属性
-      pos:{
-        name:''
-      },
-      updatePos:{
-        name:''
-      },
-      multipleSelection: [],
-      dialogVisible: false,
-      jobLevels: [],
       jl:{
         name:'',
         titleLevel:''
       },
+      updateLevel:{
+        name:'',
+        titleLevel:'',
+        enabled: false
+      },
+      multipleSelection: [],
+      dialogVisible: false,
+      jobLevels: [],
       selectJobLevels: [
           '正高级',
           '副高级',
           '初级',
-          '中级',
-          '高级'
+          '中级'
       ],
-      value: true
+      loading: false
     }
   },
   mounted() {
-    this.initPositions();
+    this.initJobLevels();
   },
   methods:{
     addPosition(){
-      if (this.pos.name) {
-        this.postRequest("/system/basic/pos/", this.pos).then(resp=>{
+      if (this.jl.name && this.jl.titleLevel) {
+        this.postRequest("/system/basic/jobLevel/", this.jl).then(resp=>{
           if (resp) {
-            this.initPositions();
-            this.pos.name='';
+            this.initJobLevels();
+            this.jl.name='';
+            this.jl.titleLevel = '';
           }
         })
       } else {
-        this.$message.error('职位不能为空！');
+        this.$message.error('职称、职级不能为空！');
       }
 
     },
 
-    initPositions(){
+    initJobLevels(){
+      this.loading = true;
       this.getRequest("/system/basic/jobLevel/").then(resp=>{
+        this.loading = false;
         this.jobLevels = resp;
       })
     },
 
     showEditView(index, data){
       this.dialogVisible = true;
-      //this.updatePos=data
-      Object.assign(this.updatePos, data);
+      Object.assign(this.updateLevel, data);
     },
 
     doUpdate(){
-      this.putRequest("/system/basic/pos/", this.updatePos).then(resp=>{
+      this.putRequest("/system/basic/jobLevel/", this.updateLevel).then(resp=>{
         if (resp) {
           this.dialogVisible = false;
-          this.initPositions();
+          this.initJobLevels();
         }
       })
     },
 
     handleDelete(index, data){
-      this.$confirm('此操作将永久删除[' + data.name + ']职位, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除[' + data.name + '｜' + data.titleLevel + ']职称, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.deleteRequest("/system/basic/pos/" + data.id).then(resp=>{
-          this.initPositions();
+        this.deleteRequest("/system/basic/jobLevel/" + data.id).then(resp=>{
+          this.initJobLevels();
         })
       }).catch(() => {
         this.$message({
@@ -190,9 +232,9 @@ export default {
         ids += item.id + ','
         console.log(ids);
       });
-      this.deleteRequest("/system/basic/pos/delBatch/" + ids).then(resp=>{
+      this.deleteRequest("/system/basic/jobLevel/delBatch/" + ids).then(resp=>{
         if (resp) {
-          this.initPositions();
+          this.initJobLevels();
         }
       });
     }
